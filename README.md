@@ -60,7 +60,7 @@ this.map = new L.map("map", {
 ```
 
 ## timeDimension
-```
+```javascript
 timeDimension(featureCollection) {
     let startDate = new Date();
     startDate.setUTCHours(0, 0, 0, 0);
