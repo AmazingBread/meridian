@@ -1,7 +1,7 @@
 # TimeDimension
 ![meridian](./src/assets/timedimension.png)
 ## import
-```
+```javascript
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-polylinedecorator";
@@ -19,7 +19,7 @@ Icon.Default.mergeOptions({
 });
 ```
 ## json data
-```
+```json
 {
     "type": "FeatureCollection",
     "name": "replay",
@@ -41,7 +41,7 @@ Icon.Default.mergeOptions({
 ```
 
 ## map setting
-```
+```javascript
 this.map = new L.map("map", {
     timeDimensionControl: true, //replay
     timeDimensionControlOptions: {
