@@ -1,14 +1,14 @@
 <template>
-	<Meridian />
+	<Timedimension />
 </template>
 
 <script>
-import Meridian from "./components/meridian.vue";
+import Timedimension from "./components/timedimension.vue";
 
 export default {
 	name: "App",
 	components: {
-		Meridian,
+		Timedimension,
 	},
 };
 </script>

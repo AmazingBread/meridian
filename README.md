@@ -1,45 +1,92 @@
-# meridian
-![meridian](./src/assets/meridianLine.png)
-## data sort
+# TimeDimension
+![meridian](./src/assets/timedimension.png)
+## import
 ```
-trackData.sort(function (a, b) {
-    if (a.updated > b.updated) {
-        return 1;
-    }
-    if (a.updated < b.updated) {
-        return -1;
-    }
-    // a must be equal to b
-    return 0;
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "leaflet-polylinedecorator";
+import "leaflet-timedimension";
+import "leaflet-timedimension/src/leaflet.timedimension.control.css";
+import featureCollection from "@/assets/featureCollection.json";
+
+import { Icon }  from 'leaflet'
+delete Icon.Default.prototype._getIconUrl;
+
+Icon.Default.mergeOptions({
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 ```
 
-## meridian 180 icsxssue
+## map setting
 ```
-let coordinates = [];
-let firstLng = parseFloat(trackData[0].longitude)
-let lastLng = parseFloat(trackData[trackData.length-1].longitude)
-let abs = firstLng - lastLng
+this.map = new L.map("map", {
+    timeDimensionControl: true, //replay
+    timeDimensionControlOptions: {
+        //replay
+        timeSliderDragUpdate: true,
+        loopButton: false,
+        autoPlay: true,
+        playerOptions: {
+            transitionTime: 100,
+            loop: false,
+            startOver: true,
+        },
+    },
+    timeDimension: true, //replay
+})
+```
 
-if(Math.abs(abs) > 180 || (firstLng < 0 && lastLng < 0)){
-    trackData.forEach((coordinate) => {
-        let lng = parseFloat(coordinate.longitude);
-        if(lng < 0){
-            lng += 360
-        }
-        coordinates.push([parseFloat(coordinate.latitude), lng]);
-    })
-} else {
-    trackData.forEach((coordinate) => {
-        let lng = parseFloat(coordinate.longitude);
-        if(firstLng < 0){
-            lng += 360
-        }
-        coordinates.push([parseFloat(coordinate.latitude), lng]);
-    })
+## timeDimension
+```
+timeDimension(featureCollection) {
+    let startDate = new Date();
+    startDate.setUTCHours(0, 0, 0, 0);
 
-}
-var polyline = L.polyline(coordinates, { color: "red" }).addTo(
-    this.map
-);
+    let geoJSONLayer = L.geoJSON(featureCollection, {
+        onEachFeature: function (feature, layer) {
+            if (layer instanceof L.Polyline) {
+                layer.setStyle({
+                    color: feature.properties.color,
+                    weight: "4",
+                    opacity: 0.8,
+                    zIndexOffset: 900,
+                });
+            }
+            layer.bindTooltip(feature.properties.name);
+        },
+    });
+
+    let geoJSONTDLayer = L.timeDimension.layer.geoJson(geoJSONLayer, {
+        period: "PT2M",
+        updateTimeDimensionMode: "replace",
+        updateTimeDimension: true,
+        addlastPoint: true,
+        // waitForReady: true,
+    });
+
+    geoJSONTDLayer.addTo(this.map);
+    L.polylineDecorator(geoJSONTDLayer, {
+        patterns: [
+            // defines a pattern of 10px-wide dashes, repeated every 20px on the line
+            {
+                offset: 0,
+                repeat: 20,
+                symbol: L.Symbol.arrowHead({
+                    pixelSize: 12,
+                    pathOptions: {
+                        fillColor: "#e26a8c",
+                        color: "#000",
+                        fillOpacity: 0.8,
+                        weight: 0.5,
+                        stroke: true,
+                    },
+                }),
+            },
+        ],
+    }).addTo(this.map);
+    // this.map.setView(geoJSONLayer.getBounds(), 3);
+    this.map.fitBounds(geoJSONLayer.getBounds());
+},
 ```
