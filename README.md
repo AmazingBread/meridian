@@ -18,6 +18,27 @@ Icon.Default.mergeOptions({
     shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 ```
+## json data
+```
+{
+    "type": "FeatureCollection",
+    "name": "replay",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "416037000",
+                "times": ["2023-01-25 00:17", "2023-01-25 00:53",......],
+                "color": "#098bd9"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [[120.92082, 14.55393667], [120.92118667, 14.55402167],....]
+            }
+        },....
+    ]
+})
+```
 
 ## map setting
 ```
