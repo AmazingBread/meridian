@@ -85,26 +85,6 @@ export default {
 			});
 
 			geoJSONTDLayer.addTo(this.map);
-			L.polylineDecorator(geoJSONTDLayer, {
-				patterns: [
-					// defines a pattern of 10px-wide dashes, repeated every 20px on the line
-					{
-						offset: 0,
-						repeat: 20,
-						symbol: L.Symbol.arrowHead({
-							pixelSize: 12,
-							pathOptions: {
-								fillColor: "#e26a8c",
-								color: "#000",
-								fillOpacity: 0.8,
-								weight: 0.5,
-								stroke: true,
-							},
-						}),
-					},
-				],
-			}).addTo(this.map);
-			// this.map.setView(geoJSONLayer.getBounds(), 3);
 			this.map.fitBounds(geoJSONLayer.getBounds());
 		},
 	},
